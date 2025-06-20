@@ -640,3 +640,66 @@ Exploration of parametric space.
 Training with no enough data. Then do more epochs.
 
 Split batch on multiple GPUs. Gradient descent has a sum: sum is commutative. Then one can achieve sublinear complexity via all-reduce ($\log p$ with $p$ number of GPUs).
+
+# SCIML persepectives on solving control problems
+
+Optimal control and RL:
+In discrete dynamical systems may be represeted by a Markov Decision Process
+
+In policy iterative we converge to the optimal value in finite steps. Many policy are explored.
+
+Hybrid way: value V and policy function are discovered at the same time.
+
+- HJB can have an infinity of generalized solution in continuous spaces of the state.
+- The value function is in general non-smooth.
+
+Viscosity solution is the tool to distinguish the value function from other solution of the HJB equation.
+
+We take smooth test functions that approximate from below and from above the (non-smooth) solution. The test functin touches the non-smooth solution at kinks.
+
+When HJB is discretized via finite difference we obtain a markov decision process that can be solved via dynamic programming. Same story for FEM.
+But the problem is the curse of dimensionality.
+
+Learning dynamical systems by using neural ODE with a bayesan touch to account for stocasticity.
+
+# Industrialized ML
+
+Use GP with kernel taking graphs (that described FEM meshes).
+
+Continuous Node attribute: nodes position.
+
+New graph: find an empirical law distribution from the Graph
+
+# Foundation model for PDEs
+
+Catch of classical numerical methods:
+- High cost;
+- many query problems: UQ, Design, Inverse problems.
+- Chaotic systems: different initial conditions produce widely different trajectories.
+
+Monte carlo can be used to generate useful statistics.
+
+Entire physics in any case is not known. But with still have data.
+
+Operator learning task: given a dsitribution of the data find the push-forward of the distribution through the solution operator.
+
+DNN: input and output are vectors:
+NO (neural operator): composition of hidden layer obtained via kernel integral operators.
+
+By itself NO cannot be implemented in a computer. Scalability is a problem. If for an axis one has $N$ points then an itegral operator is  of size $(N^d)^2$ where $\Omega \subset \mathbb{R}^d$.
+
+Translation invariance makes the integral operator into a convolution. For cartesian grids using FFT one scale with $N\log N$.
+
+New paradigm: local convolution but nonlocal activation. Local nonlinearities induce high frequency and ugly artifact. To avois this, the nonlinearity is made nnolocal.
+
+CNO (convolution neural operator) are structure preserving operators. Error remains low for different resolutions.
+
+Nonlinear Kernel: use attention to track iteraction between different points. Scales badly as for every point one check $N^2$ for every axis.
+
+One can use patching to reduce the complexity.
+
+Problem: collapse of the mean.
+
+What is meaninful in physics is statistical quantity of interest.
+
+Stocastic differential equation: allow to add noise in diffusion models. Reverse SDE denoises: the denoiser minimizes the level of noise.
